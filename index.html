@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Card Maker - โปรแกรมออกแบบกราฟิก</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&family=Kanit:wght@300;400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Charm:wght@400;700&family=Charmonman:wght@400;700&family=Sriracha&family=Pattaya&family=Itim&family=Mali:wght@400;700&family=Chonburi&family=Taviraj:wght@400;700&family=Pridi:wght@400;600&family=Maitree:wght@400;700&family=Trirong:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body>
+  <div id="app" class="app">
+    <!-- Top Toolbar -->
+    <header class="topbar" id="topbar">
+      <div class="topbar-left">
+        <div class="brand">
+          <div class="brand-logo">C</div>
+          <span class="brand-name">Card Maker</span>
+        </div>
+        <button class="btn btn-ghost" id="btn-new">ไฟล์ใหม่</button>
+        <button class="btn btn-ghost" id="btn-open">เปิดไฟล์</button>
+        <button class="btn btn-ghost" id="btn-save">บันทึก</button>
+      </div>
+      <div class="topbar-center">
+        <input type="text" id="doc-title" class="doc-title" value="งานออกแบบไม่มีชื่อ" />
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-ghost" id="btn-undo" title="ย้อนกลับ (Ctrl+Z)">↶</button>
+        <button class="btn btn-ghost" id="btn-redo" title="ทำซ้ำ (Ctrl+Y)">↷</button>
+        <button class="btn btn-ghost" id="btn-theme">🌓 ธีม</button>
+        <div class="dropdown">
+          <button class="btn btn-primary" id="btn-export">ส่งออก ▾</button>
+          <div class="dropdown-menu" id="export-menu">
+            <button data-export="png">ส่งออกเป็น PNG</button>
+            <button data-export="jpeg">ส่งออกเป็น JPEG</button>
+            <button data-export="svg">ส่งออกเป็น SVG</button>
+            <button data-export="pdf">ส่งออกเป็น PDF</button>
+            <button data-export="json">ส่งออกเป็น JSON</button>
+            <button data-export="print">พิมพ์</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Left Sidebar -->
+    <aside class="left-sidebar" id="left-sidebar">
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-panel="templates" title="เทมเพลต">
+          <span class="nav-icon">▦</span><span class="nav-label">เทมเพลต</span>
+        </button>
+        <button class="nav-item" data-panel="upload" title="อัปโหลด">
+          <span class="nav-icon">⇧</span><span class="nav-label">อัปโหลด</span>
+        </button>
+        <button class="nav-item" data-panel="text" title="ข้อความ">
+          <span class="nav-icon">T</span><span class="nav-label">ข้อความ</span>
+        </button>
+        <button class="nav-item" data-panel="shapes" title="รูปทรง">
+          <span class="nav-icon">◆</span><span class="nav-label">รูปทรง</span>
+        </button>
+        <button class="nav-item" data-panel="icons" title="ไอคอน">
+          <span class="nav-icon">★</span><span class="nav-label">ไอคอน</span>
+        </button>
+        <button class="nav-item" data-panel="images" title="รูปภาพ">
+          <span class="nav-icon">🖼</span><span class="nav-label">รูปภาพ</span>
+        </button>
+        <button class="nav-item" data-panel="backgrounds" title="พื้นหลัง">
+          <span class="nav-icon">▨</span><span class="nav-label">พื้นหลัง</span>
+        </button>
+        <button class="nav-item" data-panel="qrcode" title="QR Code">
+          <span class="nav-icon">▚</span><span class="nav-label">QR</span>
+        </button>
+        <button class="nav-item" data-panel="barcode" title="บาร์โค้ด">
+          <span class="nav-icon">‖‖‖</span><span class="nav-label">บาร์โค้ด</span>
+        </button>
+        <button class="nav-item" data-panel="tables" title="ตาราง">
+          <span class="nav-icon">▤</span><span class="nav-label">ตาราง</span>
+        </button>
+        <button class="nav-item" data-panel="charts" title="กราฟ">
+          <span class="nav-icon">📊</span><span class="nav-label">กราฟ</span>
+        </button>
+        <button class="nav-item" data-panel="layers" title="เลเยอร์">
+          <span class="nav-icon">⧉</span><span class="nav-label">เลเยอร์</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-panels" id="sidebar-panels"></div>
+    </aside>
+
+    <!-- Center Workspace -->
+    <main class="workspace" id="workspace">
+      <div class="workspace-viewport" id="workspace-viewport">
+        <div class="workspace-scene" id="workspace-scene">
+          <div class="canvas-wrapper" id="canvas-wrapper">
+            <div class="canvas" id="canvas"></div>
+            <div class="canvas-grid" id="canvas-grid"></div>
+            <svg class="canvas-overlay" id="canvas-overlay"></svg>
+          </div>
+        </div>
+      </div>
+      <!-- Page tabs -->
+      <div class="page-tabs" id="page-tabs"></div>
+    </main>
+
+    <!-- Right Sidebar (Properties) -->
+    <aside class="right-sidebar" id="right-sidebar">
+      <div class="properties-panel" id="properties-panel">
+        <div class="empty-state">
+          <div class="empty-icon">✎</div>
+          <h3>ยังไม่ได้เลือกวัตถุ</h3>
+          <p>คลิกวัตถุบนแคนวาสเพื่อแก้ไขคุณสมบัติ</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Bottom Status Bar -->
+    <footer class="statusbar" id="statusbar">
+      <div class="status-left">
+        <span id="status-selection">ไม่มีวัตถุที่เลือก</span>
+        <span class="status-sep">•</span>
+        <span id="status-size">ขนาดแคนวาส: 800 × 600</span>
+      </div>
+      <div class="status-right">
+        <span id="status-mouse">X: 0, Y: 0</span>
+        <span class="status-sep">•</span>
+        <button class="zoom-btn" id="zoom-out">−</button>
+        <span id="zoom-display">100%</span>
+        <button class="zoom-btn" id="zoom-in">+</button>
+        <button class="zoom-btn" id="zoom-fit" title="พอดีหน้าจอ">⛶</button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Modal container -->
+  <div class="modal-overlay" id="modal-overlay" hidden>
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <h2 id="modal-title">Modal</h2>
+        <button class="modal-close" id="modal-close">×</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Context menu -->
+  <div class="context-menu" id="context-menu" hidden></div>
+
+  <!-- Hidden file inputs -->
+  <input type="file" id="file-input-image" accept="image/*" hidden multiple />
+  <input type="file" id="file-input-json" accept=".json,application/json" hidden />
+  <input type="file" id="file-input-svg" accept=".svg,image/svg+xml" hidden />
+
+  <!-- Core -->
+  <script src="./js/core/EventBus.js"></script>
+  <script src="./js/core/Utils.js"></script>
+  <script src="./js/core/Store.js"></script>
+  <script src="./js/core/BaseManager.js"></script>
+
+  <!-- Models -->
+  <script src="./js/models/CanvasObject.js"></script>
+  <script src="./js/models/Page.js"></script>
+  <script src="./js/models/Document.js"></script>
+
+  <!-- Managers -->
+  <script src="./js/managers/HistoryManager.js"></script>
+  <script src="./js/managers/DocumentManager.js"></script>
+  <script src="./js/managers/PageManager.js"></script>
+  <script src="./js/managers/ObjectManager.js"></script>
+  <script src="./js/managers/LayerManager.js"></script>
+  <script src="./js/managers/SelectionManager.js"></script>
+  <script src="./js/managers/ClipboardManager.js"></script>
+  <script src="./js/managers/CanvasManager.js"></script>
+  <script src="./js/managers/WorkspaceManager.js"></script>
+  <script src="./js/managers/SnapManager.js"></script>
+  <script src="./js/managers/GuideManager.js"></script>
+  <script src="./js/managers/PropertyManager.js"></script>
+  <script src="./js/managers/SidebarManager.js"></script>
+  <script src="./js/managers/ToolbarManager.js"></script>
+  <script src="./js/managers/ContextMenuManager.js"></script>
+  <script src="./js/managers/ShortcutManager.js"></script>
+  <script src="./js/managers/FontManager.js"></script>
+  <script src="./js/managers/AssetManager.js"></script>
+  <script src="./js/managers/TemplateManager.js"></script>
+  <script src="./js/managers/ImportManager.js"></script>
+  <script src="./js/managers/ExportManager.js"></script>
+  <script src="./js/managers/PluginManager.js"></script>
+
+  <!-- Plugins -->
+  <script src="./js/plugins/QRCodePlugin.js"></script>
+  <script src="./js/plugins/BarcodePlugin.js"></script>
+  <script src="./js/plugins/ChartPlugin.js"></script>
+  <script src="./js/plugins/TablePlugin.js"></script>
+
+  <!-- Application -->
+  <script src="./js/Application.js"></script>
+  <script src="./js/main.js"></script>
+</body>
+</html>
